@@ -1,0 +1,6 @@
+.retry
+.Keys*
+credentials*
+.vagrant
+vagrant*
+ec2*
