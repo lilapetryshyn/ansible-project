@@ -1,0 +1,4 @@
+---
+# tasks file for artifactory
+- include: install_mysql.yml
+- include: install_artifactory.yml

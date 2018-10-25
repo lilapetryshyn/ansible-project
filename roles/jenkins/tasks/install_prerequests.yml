@@ -1,0 +1,43 @@
+---
+
+- name: download get-pip.py
+  get_url: url=https://bootstrap.pypa.io/get-pip.py  dest=/tmp
+
+- name: install pip
+  command: "python /tmp/get-pip.py"
+
+- name: Install python-jenkins
+  pip: name=python-jenkins
+
+- name: Install aws-cli
+  pip: name=awscli
+
+- name: create directory .aws
+  file:
+    path: /var/lib/jenkins/.aws/
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+  become: yes
+
+- name: Copy aws credensials
+  template:
+    src: credentials.j2
+    dest: /var/lib/jenkins/.aws/credentials
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+- name: Copy aws config
+  template:
+    src: config.j2
+    dest: /var/lib/jenkins/.aws/config
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+- name: Install ansible
+  pip: name=ansible

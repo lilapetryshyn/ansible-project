@@ -1,0 +1,17 @@
+---
+# handlers file for artifactory
+
+- name: 'start artifactory'
+  become: yes
+  service:
+    name: artifactory
+    state: started
+
+- name: 'restart artifactory'
+  become: yes
+  service:
+    name: artifactory
+    state: restarted
+
+- name: 'enable artifactory service'
+  service: name=artifactory enabled=true

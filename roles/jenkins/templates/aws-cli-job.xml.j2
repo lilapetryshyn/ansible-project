@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>This job setup aws instance, install apache and create ami from it</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <authToken>{{ crumb_token.json.crumb }}</authToken>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>aws ec2 create-security-group --group-name ApacheSG --description &quot;SG for Apache ami instance&quot; --vpc-id vpc-01bb513d577bebe72
+
+aws ec2 authorize-security-group-ingress --group-name ApacheSG --protocol tcp --port 80 --cidr 0.0.0.0/0
+
+aws ec2 authorize-security-group-ingress --group-name ApacheSG --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+aws ec2 authorize-security-group-ingress --group-name ApacheSG --protocol tcp --port 443 --cidr 0.0.0.0/0
+
+aws ec2 run-instances --image-id ami-6cd6f714 --count 1 --instance-type t2.micro --key-name key --security-groups ApacheSG --user-data file://${WORKSPACE}/httpd.sh &gt;&gt; ${WORKSPACE}/instance.json
+
+export INSTANCE_ID=$(cat instance.json | grep -iw InstanceId | cut -d&apos;&quot;&apos; -f4 | tail -1)
+
+echo "Waiting before instance will running"
+
+sleep 2m
+
+aws ec2 create-image --instance-id ${INSTANCE_ID} --name &quot;My Apache&quot; --no-reboot</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
+

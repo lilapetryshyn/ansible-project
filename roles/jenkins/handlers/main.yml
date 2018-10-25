@@ -1,0 +1,7 @@
+---
+# handlers file for jenkins
+
+- name: enable jenkins
+  systemd:
+    name: jenkins
+    enabled: true

@@ -1,0 +1,19 @@
+---
+
+- name: Install EPEL release for nginx
+  yum: name=epel-release state=present
+  when: ansible_os_family == 'RedHat'
+
+- name: Install requires
+  package: name={{ item }} state=present
+  with_items:
+    - vim
+    - wget
+    - curl
+    - unzip
+    - zip
+    - python-pip
+    - openssh-server
+    - curl
+    - openssl
+    - tzdata

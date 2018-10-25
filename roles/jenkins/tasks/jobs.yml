@@ -1,0 +1,52 @@
+---
+
+- name: Add user to group
+  user:
+    name: jenkins
+    groups: vagrant
+    append: yes
+  become: yes
+
+- name: Get Jenkins crumb
+  uri:
+    user: ansible
+    password: passwd
+    force_basic_auth: yes
+    url: "http://127.0.0.1:8080/crumbIssuer/api/json"
+    return_content: yes
+  register: crumb_token
+  until: crumb_token.content.find('Please wait while Jenkins is getting ready') == -1
+  retries: 10
+  delay: 5
+
+- name: Set crumb token
+  set_fact:
+    crumb: "{{ crumb_token.json.crumbRequestField }}={{ crumb_token.json.crumb }}"
+
+- name: Create Jenkins job for apache ami
+  jenkins_job:
+    config: "{{ lookup('template', 'aws-cli-job.xml.j2') }}"
+    name: aws-ami-apache
+    token: b5feed658b431f04206fa7bac90b533e
+    url: http://localhost:8080
+    user: ansible
+
+- name: Copy script for user-data
+  template:
+    src: httpd.sh.j2
+    dest: /var/lib/jenkins/workspace/aws-ami-apache/httpd.sh
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+  become: yes
+
+- name: Run build of a project in Jenkins
+  uri:
+    url: "http://127.0.0.1:8080/job/aws-ami-apache/build?token={{ crumb_token.json.crumb }}"
+    method: POST
+    user: ansible
+    password: b5feed658b431f04206fa7bac90b533e
+    force_basic_auth: yes
+    use_proxy: false
+    status_code: 201
+    validate_certs: false

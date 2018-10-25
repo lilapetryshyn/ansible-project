@@ -1,0 +1,28 @@
+---
+
+- name: Common
+  hosts: all
+  become: yes
+   roles:
+     - role: base
+
+# - name: install jfrog
+#   hosts: jfrog
+#   become: yes
+#
+#   roles:
+#     - role: artifactory
+#
+# - name: Install gitlab
+#   hosts: gitlab
+#   become: yes
+#
+#   roles:
+#     - role: gitlab
+
+- name: install Jenkins
+  hosts: jenkins-new
+  become: yes
+
+  roles:
+    - role: jenkins

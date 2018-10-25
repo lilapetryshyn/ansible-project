@@ -1,0 +1,22 @@
+1  sudo add-apt-repository ppa:webupd8team/java
+  2  sudo apt-get update
+  3  sudo apt-get install oracle-java8-installer
+  4  echo "JAVA_HOME=$(which java)" | sudo tee -a /etc/environment
+  5  java -v
+  6  java -version
+  7  source /etc/environment
+  8  sudo apt install mysql-server
+  9  sudo su -
+ 10  history
+vagrant@jfrog:~$ sudo su -
+root@jfrog:~# history
+  1  apt install mysql-server
+  2  dpkg -i /home/vagrant/jfrog-artifactory-oss-6.3.3.deb
+  3  /opt/jfrog/artifactory/bin/configure.mysql.sh
+  4  vi /etc/opt/jfrog/artifactory/default
+  5  systemctl start artifactory
+  6  sevise artifactory start
+  7  servise artifactory start
+  8  service artifactory start
+  9  service artifactory status
+ 10  history

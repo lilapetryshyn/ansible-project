@@ -1,0 +1,19 @@
+---
+# defaults file for artifactory
+
+artifactory_version: "6.3.3"
+artifactory_license: oss
+artifactory_username: "artifactory"
+artifactory_password: "P@ssw0rd"
+
+artifactory_data_filestore_path: "/opt/artifactory/filestore"
+artifactory_data_derby_path: "/opt/artifactory/derby"
+artifactory_database: mysql
+mysql_root_password: P@ssw0rd
+
+artifactory_url: "https://bintray.com/artifact/download/jfrog/artifactory/jfrog-artifactory-{{ artifactory_license }}-{{ artifactory_version }}.zip"
+artifactory_file: "artifactory-{{ artifactory_version }}.zip"
+artifactory_home: "/opt/artifactory/artifactory-{{ artifactory_license }}-{{ artifactory_version }}"
+
+mysql_jdbc_base: "mysql-connector-java-5.1.34"
+mysql_jdbc_url: "http://dev.mysql.com/get/Downloads/Connector-J/{{mysql_jdbc_base}}.tar.gz"

@@ -1,0 +1,6 @@
+---
+# tasks file for jenkins
+- include: install_jenkins.yml
+  tags: "install"
+- include: install_prerequests.yml
+  tags: "adds"
