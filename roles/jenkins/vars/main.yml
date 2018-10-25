@@ -91,5 +91,5 @@ jenkins_plugins:
   - codedeploy
   - deploy
   - envinject-api
-  - Eenvinject
+  - envinject
   - shared-objects

@@ -24,7 +24,8 @@
 - name: Wait Jenkins to start
   wait_for:
     port: 8080
-    delay: 10
+    delay: 30
+    connect_timeout: 10
 
 - name: init password jenkin
   shell: cat /var/lib/jenkins/secrets/initialAdminPassword
