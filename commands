@@ -1,0 +1,44 @@
+
+- как посмотреть список всех пактов
+yum list installed
+rpm -qa
+You can also easily get a count of the installed packages by piping the output to wc:
+yum list installed  | wc -l
+rpm -qa | wc -l
+
+- как установить из .rpm, .dpkg файла
+rpm -i
+rpm -u - to upgrade(install if doesn't exist)
+dpkg -i
+- как посмотреть содержимое файла, не устанавливая его
+rpm2cpio myrpmfile.rpm
+rpm2cpio - < myrpmfile.rpm
+rpm2cpio myrpmfile.rpm | cpio -idmv   unpackage rpm
+
+rpm -q -l -p  - listing of the files inside
+
+To see all the files the package installed onto your system, do this:
+dpkg-query -L <package_name>
+To see the files a .deb file will install
+dpkg-deb -c <package_name.deb>
+
+- как посмотреть какие файлы были установлены вместе с пакетом
+dpkg -L package-name
+
+rpm -qpl file.rpm
+
+- какие зависимости есть у пакета
+rpm -qpR
+dpkg -I
+
+- как удалить.
+
+dpkg --remove
+
+rpm -e
+
+- как узнать какому пакету пренадлежить конкретный файл в системе
+
+rpm -qf /bin/ps
+
+dpkg -S

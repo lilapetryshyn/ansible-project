@@ -1,0 +1,53 @@
+#!/usr/bin/env groovy
+
+import jenkins.model.*
+import groovy.json.JsonSlurper
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.cloudbees.plugins.credentials.domains.Domain
+import com.cloudbees.plugins.credentials.CredentialsScope
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
+import org.jenkinsci.plugins.plaincredentials.*
+import org.jenkinsci.plugins.plaincredentials.impl.*
+import org.apache.commons.fileupload.FileItem
+
+// Define variables
+String DOMAIN_NAME = "mydomain.com"
+String JENKINS_HOME = "/var/lib/jenkins"
+String INIT_DIR = JENKINS_HOME + "/" + "init.groovy.d/"
+String SSH_CREDS_INFO_FILE = INIT_DIR + "SSH_CREDS_FILE"
+String PASS_CREDS_INFO_FILE = INIT_DIR + "PASS_CREDS_FILE"
+String SSH_KEY_DIR = JENKINS_HOME + "/.ssh/"
+
+// Add credentials domain. Skip, if exist
+SystemCredentialsProvider SYSTEM_CREDS = SystemCredentialsProvider.getInstance()
+Domain DOMAIN = new Domain(DOMAIN_NAME, "", null)
+SYSTEM_CREDS.addDomain(DOMAIN, [])
+
+CREDENTIALS_STORE = Jenkins.instance.getExtensionList(
+        'com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+
+// Setup SSH credentials
+def SSH_CREDS_INFO = new JsonSlurper().parseText(new File(SSH_CREDS_INFO_FILE).getText('UTF-8'))
+for (credential in SSH_CREDS_INFO) {
+    String SSH_KEY = new File(SSH_KEY_DIR + credential.keyfile).getText('UTF-8')
+    credentials = new BasicSSHUserPrivateKey(
+            CredentialsScope.GLOBAL,
+            credential.id, credential.user,
+            new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(SSH_KEY),
+            "",
+            credential.id)
+    CREDENTIALS_STORE.addCredentials(DOMAIN, credentials)
+}
+
+// Setup user/password credentials
+def PASS_CREDS_INFO = new JsonSlurper().parseText(new File(PASS_CREDS_INFO_FILE).getText('UTF-8'))
+for (credential in PASS_CREDS_INFO) {
+    credentials = new UsernamePasswordCredentialsImpl(
+            CredentialsScope.GLOBAL,
+            credential.id,
+            "",
+            credential.user,
+            credential.password)
+    CREDENTIALS_STORE.addCredentials(DOMAIN, credentials)
+}

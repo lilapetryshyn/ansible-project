@@ -1,0 +1,5 @@
+[
+  {"user" : "vagrant", "id" : "vagrant-ssh", "keyfile": "vagrant"},
+  {"user" : "ec2-user", "id" : "ec2-ssh", "keyfile": "ec2-user"},
+  {"user" : "git", "id" : "git-ssh", "keyfile": "git"}
+]

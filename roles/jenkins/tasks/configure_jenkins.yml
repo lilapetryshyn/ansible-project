@@ -1,0 +1,90 @@
+---
+
+- name: install plugin
+  jenkins_plugin:
+    name: "{{ item }}"
+    state: latest
+    url_username: admin
+    url_password: "{{ adminpwd.stdout }}"
+  with_items: "{{ jenkins_plugins }}"
+
+- name: restart jenkins
+  systemd:
+    name: jenkins
+    state: restarted
+
+- name: Wait Jenkins to start
+  wait_for:
+    port: 8080
+    delay: 30
+
+- name: create directory .ssh
+  file:
+    path: /var/lib/jenkins/.ssh/
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0700
+  become: yes
+
+
+- name: create directory init.groovy.d
+  file:
+    path: /var/lib/jenkins/init.groovy.d/
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  become: yes
+
+- name: Copy key-info file
+  copy:
+    src: SSH_CREDS_FILE.json
+    dest: /var/lib/jenkins/init.groovy.d/SSH_CREDS_FILE
+    owner: jenkins
+    group: jenkins
+    mode: 0666
+  become: yes
+
+- name: Copy pass-info file
+  template:
+    src: PASS_CREDS_FILE.json.j2
+    dest: /var/lib/jenkins/init.groovy.d/PASS_CREDS_FILE
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+
+- name: Copy key for vagrant user
+  copy:
+    src: vagrant
+    dest: /var/lib/jenkins/.ssh/vagrant
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+- name: Copy key for ec2-user user
+  copy:
+    src: ec2-user
+    dest: /var/lib/jenkins/.ssh/ec2-user
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+- name: Copy key for github user
+  copy:
+    src: git
+    dest: /var/lib/jenkins/.ssh/git
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+  become: yes
+
+- name: Create jenkins Credentials
+  jenkins_script:
+    script: "{{ lookup('template', 'creds.groovy.j2') }}"
+    user: admin
+    password: "{{ adminpwd.stdout }}"
