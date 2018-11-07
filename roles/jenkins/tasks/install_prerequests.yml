@@ -14,7 +14,7 @@
 
 - name: create directory .aws
   file:
-    path: /var/lib/jenkins/.aws/
+    path: /home/vagrant/.aws/
     state: directory
     owner: jenkins
     group: jenkins
@@ -24,7 +24,7 @@
 - name: Copy aws credensials
   template:
     src: credentials.j2
-    dest: /var/lib/jenkins/.aws/credentials
+    dest: /home/vagrant/.aws/credentials
     owner: jenkins
     group: jenkins
     mode: 0600
@@ -33,7 +33,7 @@
 - name: Copy aws config
   template:
     src: config.j2
-    dest: /var/lib/jenkins/.aws/config
+    dest: /home/vagrant/.aws/config
     owner: jenkins
     group: jenkins
     mode: 0600

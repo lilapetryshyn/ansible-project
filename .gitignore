@@ -4,3 +4,4 @@ credentials*
 .vagrant
 vagrant*
 ec2*
+git

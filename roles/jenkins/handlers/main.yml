@@ -5,3 +5,17 @@
   systemd:
     name: jenkins
     enabled: true
+
+- name: restart jenkins
+  systemd:
+    name: jenkins
+    state: restarted
+
+- name: Wait jenkins to start
+  uri:
+    url: "http://127.0.0.1:8080/login"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 1

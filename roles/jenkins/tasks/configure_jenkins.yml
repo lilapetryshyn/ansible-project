@@ -7,16 +7,11 @@
     url_username: admin
     url_password: "{{ adminpwd.stdout }}"
   with_items: "{{ jenkins_plugins }}"
+  notify:
+    - restart jenkins
+    - Wait jenkins to start
 
-- name: restart jenkins
-  systemd:
-    name: jenkins
-    state: restarted
-
-- name: Wait Jenkins to start
-  wait_for:
-    port: 8080
-    delay: 30
+- meta: flush_handlers
 
 - name: create directory .ssh
   file:
@@ -26,7 +21,6 @@
     group: jenkins
     mode: 0700
   become: yes
-
 
 - name: create directory init.groovy.d
   file:
@@ -86,5 +80,11 @@
 - name: Create jenkins Credentials
   jenkins_script:
     script: "{{ lookup('template', 'creds.groovy.j2') }}"
+    user: admin
+    password: "{{ adminpwd.stdout }}"
+
+- name: Install maven tools
+  jenkins_script:
+    script: "{{ lookup('template', 'add-maven.groovy.j2') }}"
     user: admin
     password: "{{ adminpwd.stdout }}"

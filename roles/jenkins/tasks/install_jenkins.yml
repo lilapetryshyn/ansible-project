@@ -19,11 +19,9 @@
   systemd:
     name: jenkins
     state: started
+  notify: Wait jenkins to start
 
-- name: Wait Jenkins to start
-  wait_for:
-    port: 8080
-    delay: 30
+- meta: flush_handlers
 
 - name: init password jenkin
   shell: cat /var/lib/jenkins/secrets/initialAdminPassword

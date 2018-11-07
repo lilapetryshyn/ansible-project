@@ -83,6 +83,9 @@ jenkins_plugins:
   - shared-objects
   - ssh-credentials
   - ssh-slaves
+  - ssh-agent
+  - ssh-slaves
+  - ssh-steps
   - structs
   - subversion
   - timestamper
@@ -99,3 +102,6 @@ jenkins_plugins:
   - workflow-step-api
   - workflow-support
   - ws-cleanup
+  - windows-slaves
+  - ruby-runtime
+  - capitomcat
