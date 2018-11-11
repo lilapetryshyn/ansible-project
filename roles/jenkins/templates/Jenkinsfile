@@ -64,7 +64,7 @@ pipeline {
     success {
       sshagent(['ec2-ssh']) {
         sh "scp -o StrictHostKeyChecking=no target/*.war 'ec2-user@${env.INSTANCE_IP}:/tmp'"
-        sh "ssh ec2-user@${env.INSTANCE_IP} 'sudo mv /tmp/*.war /opt/tomcat/webapps/'"
+        sh "ssh -o StrictHostKeyChecking=no ec2-user@${env.INSTANCE_IP} 'sudo mv /tmp/*.war /opt/tomcat/webapps/'"
       }
     }
   }
