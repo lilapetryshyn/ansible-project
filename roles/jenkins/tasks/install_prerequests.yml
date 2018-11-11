@@ -8,7 +8,7 @@
 
 - name: Install requires
   pip:
-    name: [u'python-jenkins', u'lxml', u'awscli']
+    name: ['python-jenkins', 'lxml', 'awscli']
     state: present
 
 - name: create directory .aws
