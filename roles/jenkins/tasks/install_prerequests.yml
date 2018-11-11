@@ -6,11 +6,12 @@
 - name: install pip
   command: "python /tmp/get-pip.py"
 
-- name: Install python-jenkins
-  pip: name=python-jenkins
-
-- name: Install aws-cli
-  pip: name=awscli
+- name: Install requires
+  pip: name={{ item }} state=present
+  with_items:
+    - python-jenkins
+    - lxml
+    - awscli
 
 - name: create directory .aws
   file:
