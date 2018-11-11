@@ -7,11 +7,9 @@
   command: "python /tmp/get-pip.py"
 
 - name: Install requires
-  pip: name={{ item }} state=present
-  with_items:
-    - python-jenkins
-    - lxml
-    - awscli
+  pip:
+    name: [u'python-jenkins', u'lxml', u'awscli']
+    state: present
 
 - name: create directory .aws
   file:

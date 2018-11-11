@@ -31,7 +31,6 @@
     user: jenkins
     password: "{{ admin_user_pass }}"
 
-
 - name: Run build of a project in Jenkins
   uri:
     url: "http://127.0.0.1:8080/job/ansible-helloworld/build?token={{ crumb_token.json.crumb }}"
