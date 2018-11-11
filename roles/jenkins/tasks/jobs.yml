@@ -10,7 +10,7 @@
 - name: Get Jenkins crumb
   uri:
     user: jenkins
-    password: {{ admin_user_pass }}
+    password: "{{ admin_user_pass }}"
     force_basic_auth: yes
     url: "http://127.0.0.1:8080/crumbIssuer/api/json"
     return_content: yes
@@ -29,6 +29,7 @@
     name: ansible-helloworld
     url: http://localhost:8080
     user: jenkins
+    password: "{{ admin_user_pass }}"
 
 
 
@@ -36,8 +37,8 @@
   uri:
     url: "http://127.0.0.1:8080/job/ansible-helloworld/build?token={{ crumb_token.json.crumb }}"
     method: POST
-    user: jenkin
-    password: {{ admin_user_pass }}
+    user: jenkins
+    password: "{{ admin_user_pass }}"
     force_basic_auth: yes
     use_proxy: false
     status_code: 201
