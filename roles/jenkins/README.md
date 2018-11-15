@@ -36,3 +36,49 @@ Author Information
 ------------------
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+
+
+
+
+
+
+
+
+import jenkins.model.*;
+import jenkins.security.*
+user = hudson.model.User.get('jenkins')
+t = new apitoken.ApiTokenStore()
+def api_token = generateNewToken(jenkinstoken)
+user.addProperty(jenkinstoken)
+user.save()
+prop = user.getProperty(jenkins.security.ApiTokenProperty.class)
+println(prop.getApiToken())
+
+import jenkins.model.*;
+import jenkins.security.*
+import org.apache.commons.lang3.*;
+
+user = hudson.model.User.get('jenkins')
+t =  new apitoken.ApiTokenStore()
+api_token = t.generateNewToken('jenkinstoken').toString()
+token = StringUtils.substringAfterLast(api_token, "@")
+println token
+user.addProperty(token)
+user.save()
+prop = user.getProperty(jenkins.security.ApiTokenProperty.class)
+println(prop.getApiToken())
+
+import jenkins.model.*;
+import jenkins.security.*
+import org.apache.commons.lang3.*;
+
+user = hudson.model.User.get('jenkins')
+t =  new apitoken.ApiTokenStore()
+api_token = doGenerateNewToken(user, "jenkinstoken")
+
+println api_token
+user.addProperty(api_token)
+user.save()
+prop = user.getProperty(jenkins.security.ApiTokenProperty.class)
+println(prop.getApiToken())
