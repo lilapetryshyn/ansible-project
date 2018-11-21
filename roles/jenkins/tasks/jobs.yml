@@ -35,31 +35,25 @@
   jenkins_script:
     script: |
         import jenkins.model.*;
-        import jenkins.security.*
-        import org.apache.commons.lang3.*;
-        user = hudson.model.User.get('jenkins')
-        t =  new apitoken.ApiTokenStore()
-        api_token = doGenerateNewToken(user, "jenkinstoken")
-        println api_token
-        user.addProperty(api_token)
-        user.save()
+        import jenkins.security.*;
+        user = hudson.model.User.get('test3')
         prop = user.getProperty(jenkins.security.ApiTokenProperty.class)
-        println(prop.getApiToken())
-
-    user: admin
-    password: "{{ adminpwd.stdout }}"
+        prop.changeApiToken()
+        println(prop.getApiTokenInsecure())
+    user: jenkins
+    password: "{{ admin_user_pass }}"
   register: user_token
 
 - name: print token jenkins
   debug:
-    var: user.token.stdout
+    var: user_token.output
 
 - name: Run build of a project in Jenkins
   uri:
     url: "http://127.0.0.1:8080/job/ansible-helloworld/build?token={{ crumb_token.json.crumb }}"
     method: POST
     user: jenkins
-    password: "{{ user_token }}"
+    password: "{{ user_token.output }}"
     force_basic_auth: yes
     use_proxy: false
     status_code: 201
