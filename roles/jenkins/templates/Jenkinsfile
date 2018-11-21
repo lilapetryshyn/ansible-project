@@ -48,24 +48,21 @@ pipeline {
       }
     }
     stage("Ansible-tomcat") {
-      steps {
-        println env.INSTANCE_IP
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']],
-                                    doGenerateSubmoduleConfigurations: false,
-                                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'tomcat-ansible']],
-                                    submoduleCfg: [],
-                                    userRemoteConfigs: [[credentialsId: 'git-ssh',
-                                    url: 'https://github.com/lilapetryshyn/tomcat-ansible.git']]])
-        ansiblePlaybook become: true, credentialsId: 'ec2-ssh', disableHostKeyChecking: true, inventory: 'tomcat-ansible/hosts', playbook: 'tomcat-ansible/site.yml'
+     steps {
+       println env.INSTANCE_IP
+       checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+                                   doGenerateSubmoduleConfigurations: false,
+                                   extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'tomcat-ansible']],
+                                   submoduleCfg: [],
+                                   userRemoteConfigs: [[credentialsId: 'git-ssh',
+                                   url: 'https://github.com/lilapetryshyn/tomcat-ansible.git']]])
+       ansiblePlaybook become: true, credentialsId: 'ec2-ssh', disableHostKeyChecking: true, inventory: 'tomcat-ansible/hosts', playbook: 'tomcat-ansible/site.yml'
       }
     }
   }
   post {
     success {
-      sshagent(['ec2-ssh']) {
-        sh "scp -o StrictHostKeyChecking=no target/*.war 'ec2-user@${env.INSTANCE_IP}:/tmp'"
-        sh "ssh -o StrictHostKeyChecking=no ec2-user@${env.INSTANCE_IP} 'sudo mv /tmp/*.war /opt/tomcat/webapps/'"
-      }
+      sh "ansible -i '${env.INSTANCE_IP}',  --private-key=/var/lib/jenkins/.ssh/ec2-user -u ec2-user -b -m copy -a 'src=${WORKSPACE}/target/helloworld.war dest=/opt/tomcat/webapps/' all"
     }
   }
 }

@@ -36,7 +36,7 @@
     script: |
         import jenkins.model.*;
         import jenkins.security.*;
-        user = hudson.model.User.get('test3')
+        user = hudson.model.User.get('jenkins')
         prop = user.getProperty(jenkins.security.ApiTokenProperty.class)
         prop.changeApiToken()
         println(prop.getApiTokenInsecure())
