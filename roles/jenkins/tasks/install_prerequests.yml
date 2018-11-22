@@ -1,10 +1,9 @@
 ---
 
-- name: download get-pip.py
-  get_url: url=https://bootstrap.pypa.io/get-pip.py  dest=/tmp
-
 - name: install pip
-  command: "python /tmp/get-pip.py"
+  package:
+    name: python-pip
+    state: present
 
 - name: Install requires
   pip:
